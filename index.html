@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>Solo Leveler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#000;
+  --panel:rgba(5,4,4,.92);
+  --red:#e0202f;
+  --red-hi:#ff3b4a;
+  --red-deep:#7d0d17;
+  --line:rgba(224,32,47,.55);
+  --line-soft:rgba(224,32,47,.25);
+  --bone:#f1eaea;
+  --ash:#9a9092;
+  --display:'Oxanium','Rajdhani','Segoe UI',system-ui,sans-serif;
+  --body:'Barlow','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:#000}
+body{
+  margin:0;color:var(--bone);background:#000;
+  font:500 16px/1.5 var(--body);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+/* red pinstripes across the whole page */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0,rgba(224,32,47,.20),transparent 70%),
+    repeating-linear-gradient(115deg,transparent 0 22px,rgba(224,32,47,.11) 22px 23px);
+}
+main{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:18px 16px 72px}
+h1,h2,h3{font-family:var(--display);margin:0;font-weight:700;letter-spacing:.01em}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px;font:800 20px var(--display);letter-spacing:.14em}
+.brand i{display:block;width:34px;height:18px;background:repeating-linear-gradient(135deg,var(--red) 0 4px,transparent 4px 8px);border:1px solid var(--red)}
+.date{color:var(--ash);font-size:14px;text-align:right}
+
+/* system window */
+.panel{position:relative;background:var(--panel);border:1px solid var(--line);padding:20px}
+.panel::before,.panel::after{content:"";position:absolute;width:20px;height:20px;pointer-events:none}
+.panel::before{top:-1px;left:-1px;border-top:3px solid var(--red);border-left:3px solid var(--red)}
+.panel::after{bottom:-1px;right:-1px;border-bottom:3px solid var(--red);border-right:3px solid var(--red)}
+.band{height:9px;margin:-20px -20px 20px;background:repeating-linear-gradient(135deg,var(--red) 0 7px,#000 7px 14px);border-bottom:1px solid var(--red)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.emblem-wrap{filter:drop-shadow(0 0 20px rgba(224,32,47,.5))}
+.emblem{
+  position:relative;width:150px;height:173px;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  background:linear-gradient(160deg,var(--red-hi),var(--red-deep));
+}
+.emblem::before{
+  content:"";position:absolute;inset:4px;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  background:#050303 repeating-linear-gradient(135deg,rgba(224,32,47,.32) 0 2px,transparent 2px 9px);
+}
+.emblem span{position:relative;display:grid;place-items:center;height:100%;font:800 88px/1 var(--display);text-shadow:0 0 26px rgba(224,32,47,.95)}
+.who{min-width:0}
+.name-btn{background:none;border:0;padding:0;cursor:pointer;font:700 15px var(--display);color:var(--ash);text-align:left;border-bottom:1px dashed var(--line)}
+.name-btn:hover{color:var(--bone)}
+.rank-name{font-size:clamp(26px,5vw,40px);line-height:1.1;margin:6px 0 2px}
+.rank-title{color:var(--ash);margin:0 0 14px}
+.lvl-row{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.lvl-row b{font:800 44px/1 var(--display);color:var(--red-hi)}
+.lvl-row span{font:600 15px var(--display);color:var(--ash)}
+.meter{position:relative;height:14px;background:#000;border:1px solid var(--line);overflow:hidden}
+.meter i{
+  display:block;height:100%;width:0;transition:width .45s ease;
+  background:linear-gradient(135deg,#e0202f 25%,#9e0f1b 25% 50%,#e0202f 50% 75%,#9e0f1b 75%);
+  background-size:22px 22px;
+}
+.running .meter i{animation:slide 1s linear infinite}
+@keyframes slide{to{background-position:22px 0}}
+.xp-text{display:flex;justify-content:space-between;gap:10px;font-size:14px;color:var(--ash);margin-top:6px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:18px;border:1px solid var(--line-soft)}
+.stats div{padding:10px 12px;border-right:1px solid var(--line-soft)}
+.stats div:last-child{border-right:0}
+.stats b{display:block;font:700 22px var(--display)}
+.stats small{color:var(--ash);font-size:13px}
+
+/* sections */
+section{margin-top:34px}
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.sec-head h2{font-size:24px}
+.sec-head p{margin:0;color:var(--ash);font-size:14px;max-width:46ch}
+.sec-head p.ok{color:var(--red-hi)}
+
+.day-meter{margin-bottom:16px}
+.quests{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.quest{padding:18px}
+.quest header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.quest h3{font-size:22px}
+.tag{display:none;font:700 12px var(--display);color:#fff;background:var(--red);padding:2px 8px;margin-left:8px;vertical-align:middle}
+.quest.done .tag{display:inline-block}
+.quest.done{border-color:var(--red)}
+.note{color:var(--ash);margin:4px 0 14px;font-size:15px}
+.check{
+  width:38px;height:38px;flex:none;border:1px solid var(--red);background:transparent;cursor:pointer;
+  display:grid;place-items:center;font:800 20px var(--display);color:transparent;
+}
+.check:hover{background:rgba(224,32,47,.18)}
+.check[aria-pressed="true"]{background:var(--red);color:#fff}
+.time{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;font-variant-numeric:tabular-nums}
+.logged{font:800 34px/1 var(--display)}
+.target{color:var(--ash);font:600 16px var(--display)}
+.ctrls{display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.btn{
+  min-height:40px;padding:8px 14px;background:transparent;border:1px solid var(--line);
+  font:600 14px var(--display);cursor:pointer;
+}
+.btn:hover{background:rgba(224,32,47,.16);border-color:var(--red)}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff;min-width:88px}
+.btn.primary:hover{background:var(--red-hi)}
+.reward{margin-left:auto;font:700 14px var(--display);color:var(--red-hi)}
+
+/* history */
+.history{display:grid;grid-template-columns:repeat(14,1fr);gap:6px}
+.col{text-align:center;font-size:13px;color:var(--ash)}
+.col .bar{position:relative;height:84px;border:1px solid var(--line-soft);background:#000;display:flex;align-items:flex-end}
+.col .bar i{display:block;width:100%;background:repeating-linear-gradient(135deg,var(--red) 0 4px,#8f0f1a 4px 8px)}
+.col.full .bar{border-color:var(--red)}
+.col.today .bar{border-color:#fff}
+.col.today b{color:#fff}
+.col b{display:block;font:700 14px var(--display);margin-top:4px;color:var(--bone)}
+.col.pre{opacity:.35}
+
+/* ladder */
+.ladder{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ladder li{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;padding:10px 14px;border:1px solid var(--line-soft);background:rgba(0,0,0,.6)}
+.ladder .lt{width:44px;height:44px;display:grid;place-items:center;font:800 24px var(--display);border:1px solid var(--line);background:repeating-linear-gradient(135deg,rgba(224,32,47,.25) 0 2px,transparent 2px 8px)}
+.ladder strong{display:block;font:700 17px var(--display)}
+.ladder span.t{color:var(--ash);font-size:14px}
+.ladder .lv{font:700 14px var(--display);color:var(--ash);text-align:right}
+.ladder li.passed{opacity:.5}
+.ladder li.current{border-color:var(--red);background:rgba(224,32,47,.10)}
+.ladder li.current .lv{color:var(--red-hi)}
+
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:34px;padding-top:18px;border-top:1px solid var(--line-soft)}
+.tools .hint{width:100%;margin:0 0 4px;color:var(--ash);font-size:14px}
+
+/* toast */
+#toasts{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:40;display:grid;gap:8px;width:min(92vw,420px)}
+.toast{background:#000;border:1px solid var(--red);padding:10px 14px;font:600 15px var(--display);animation:toast .3s ease-out}
+.toast::before{content:"";display:inline-block;width:10px;height:10px;margin-right:10px;background:var(--red)}
+@keyframes toast{from{opacity:0;transform:translateY(10px)}}
+
+/* level-up */
+.overlay{position:fixed;inset:0;z-index:60;display:none;place-items:center;background:rgba(0,0,0,.95);text-align:center;padding:20px}
+.overlay.show{display:grid}
+.overlay::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(115deg,transparent 0 16px,rgba(224,32,47,.35) 16px 18px);
+  animation:sweep 1.1s ease-out forwards;
+}
+@keyframes sweep{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0);opacity:.35}}
+.overlay .box{position:relative;max-width:560px}
+.overlay h2{font:800 clamp(44px,12vw,92px)/1 var(--display);letter-spacing:.04em;text-shadow:0 0 30px rgba(224,32,47,.9);animation:pop .7s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.overlay .to{font:700 28px var(--display);color:var(--red-hi);margin:12px 0 4px}
+.overlay p{color:var(--ash);margin:0 0 24px}
+
+@media (max-width:700px){
+  .hero{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .who{width:100%}
+  .lvl-row{justify-content:center}
+  .xp-text{justify-content:center}
+  .quests{grid-template-columns:1fr}
+  .history{gap:3px}
+  .col .bar{height:64px}
+  .col small{display:none}
+  .stats b{font-size:18px}
+  .date{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <div class="brand"><i></i><span id="appTitle">Hunter System</span></div>
+    <div class="date" id="today"></div>
+  </div>
+
+  <div class="panel hero">
+    <div class="band" style="grid-column:1/-1"></div>
+    <div class="emblem-wrap"><div class="emblem"><span id="emblem">E</span></div></div>
+    <div class="who">
+      <button class="name-btn" id="nameBtn" title="Rename hunter">Hunter</button>
+      <h1 class="rank-name" id="rankName">E-Rank Hunter</h1>
+      <p class="rank-title" id="rankTitle"></p>
+      <div class="lvl-row"><b id="lvl">1</b><span>Level</span></div>
+      <div class="meter" role="progressbar" aria-label="Experience to next level" aria-valuemin="0" aria-valuemax="100" id="xpBar"><i id="xpFill"></i></div>
+      <div class="xp-text"><span id="xpText"></span><span id="nextRank"></span></div>
+      <div class="stats">
+        <div><b id="stStreak">0</b><small>Day streak</small></div>
+        <div><b id="stToday">0</b><small>XP today</small></div>
+        <div><b id="stTotal">0</b><small>Total XP</small></div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head">
+      <h2>Daily quests</h2>
+      <p id="dayMsg"></p>
+    </div>
+    <div class="meter day-meter" role="progressbar" aria-label="Today's completion" id="dayBar"><i id="dayFill"></i></div>
+    <div class="quests" id="quests"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Last 14 days</h2><p>Each bar shows how much of the day's quests you cleared.</p></div>
+    <div class="panel"><div class="history" id="history"></div></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Rank ladder</h2><p id="ladderNote"></p></div>
+    <ol class="ladder" id="ladder"></ol>
+  </section>
+
+  <div class="tools">
+    <p class="hint">Progress is saved in this browser. Export it to back it up or move it to another device. Timers keep running until you pause them.</p>
+    <button class="btn" id="exportBtn">Export progress</button>
+    <button class="btn" id="importBtn">Import progress</button>
+    <button class="btn" id="resetBtn">Reset everything</button>
+    <input type="file" id="importFile" accept="application/json" hidden>
+  </div>
+</main>
+
+<div id="toasts" aria-live="polite"></div>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="luTitle">
+  <div class="box">
+    <h2 id="luTitle">Level up</h2>
+    <div class="to" id="luTo"></div>
+    <p id="luRank"></p>
+    <button class="btn primary" id="luClose">Continue</button>
+  </div>
+</div>
+
+<script>
+/* Fallback used when config.json can't be loaded (for example, opening index.html straight from disk).
+   Keep it identical to config.json. */
+const DEFAULT_CONFIG={"app":{"title":"Hunter System"},"goals":[{"id":"exercise","name":"Exercise","minutes":45,"xp":100,"step":5,"note":"Push the body past yesterday's limit."},{"id":"study","name":"Study","minutes":360,"xp":300,"step":30,"note":"Six hours of deep work. No shortcuts."},{"id":"anime","name":"Anime","minutes":120,"xp":60,"step":15,"note":"Recovery time. Earn it, then enjoy it."},{"id":"reading","name":"Reading","minutes":60,"xp":100,"step":10,"note":"One hour with a book. Feed the mind."}],"bonusXp":100,"penalty":150,"penaltyBelowPercent":50,"levels":{"base":250,"exponent":1.4,"max":100},"ranks":[{"letter":"E","name":"E-Rank Hunter","title":"The Weakest","minLevel":1},{"letter":"D","name":"D-Rank Hunter","title":"Awakened","minLevel":10},{"letter":"C","name":"C-Rank Hunter","title":"Gate Clearer","minLevel":20},{"letter":"B","name":"B-Rank Hunter","title":"Elite Raider","minLevel":35},{"letter":"A","name":"A-Rank Hunter","title":"Guild Ace","minLevel":50},{"letter":"S","name":"S-Rank Hunter","title":"Apex Fighter","minLevel":70},{"letter":"N","name":"National Level Hunter","title":"Weapon of a Nation","minLevel":90},{"letter":"M","name":"Shadow Monarch","title":"Arise","minLevel":100}]};
+
+const KEY='hunter-system-v1';
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+const fmt=n=>Math.round(n).toLocaleString();
+let CFG,S,lastFrac={},firstUpdate=true;
+
+/* ---------- dates ---------- */
+const dkey=(d=new Date())=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseKey=k=>{const[a,b,c]=k.split('-').map(Number);return new Date(a,b-1,c)};
+const addDays=(k,n)=>{const d=parseKey(k);d.setDate(d.getDate()+n);return dkey(d)};
+
+/* ---------- state ---------- */
+function freshState(){return{name:'Hunter',start:dkey(),days:{},timer:null,seenLevel:1}}
+function loadState(){
+  try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.days)return r}catch(e){}
+  return freshState();
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+const goal=id=>CFG.goals.find(g=>g.id===id);
+const targetSecs=g=>g.minutes*60;
+function addSecs(dk,id,s){const day=S.days[dk]=S.days[dk]||{};day[id]=Math.max(0,(day[id]||0)+s)}
+function secsLive(dk,id){
+  let s=(S.days[dk]&&S.days[dk][id])||0;
+  if(S.timer&&S.timer.id===id&&dk===dkey())s+=Math.max(0,(Date.now()-S.timer.startedAt)/1000);
+  return s;
+}
+function commitTimer(){
+  const t=S.timer;if(!t)return;
+  let cur=t.startedAt;const now=Date.now();
+  while(cur<now){
+    const d=new Date(cur);
+    const next=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1).getTime();
+    const end=Math.min(now,next);
+    addSecs(dkey(d),t.id,(end-cur)/1000);
+    cur=end;
+  }
+  S.timer=null;
+}
+function rollover(){
+  if(S.timer&&dkey(new Date(S.timer.startedAt))!==dkey()){
+    const id=S.timer.id;commitTimer();S.timer={id,startedAt:Date.now()};save();
+  }
+}
+
+/* ---------- scoring ---------- */
+function dayStats(dk){
+  const fr={};let sum=0,xp=0,cleared=0;
+  CFG.goals.forEach(g=>{
+    const f=Math.min(1,secsLive(dk,g.id)/targetSecs(g));
+    fr[g.id]=f;sum+=f;xp+=Math.round(g.xp*f);if(f>=1)cleared++;
+  });
+  const completion=sum/CFG.goals.length;
+  if(cleared===CFG.goals.length)xp+=CFG.bonusXp;
+  return{fr,completion,xp,cleared};
+}
+function totalXp(){
+  let xp=0;const today=dkey();
+  for(let d=S.start;d<=today;d=addDays(d,1)){
+    const st=dayStats(d);
+    xp+=st.xp;
+    if(d<today&&st.completion*100<CFG.penaltyBelowPercent)xp-=CFG.penalty;
+    xp=Math.max(0,xp);
+  }
+  return xp;
+}
+const cum=L=>Math.round(CFG.levels.base*Math.pow(L-1,CFG.levels.exponent));
+function levelInfo(xp){
+  let L=1;while(L<CFG.levels.max&&xp>=cum(L+1))L++;
+  return{L,cur:cum(L),next:L<CFG.levels.max?cum(L+1):null};
+}
+function rankFor(L){let r=CFG.ranks[0];CFG.ranks.forEach(x=>{if(L>=x.minLevel)r=x});return r}
+function streak(){
+  let d=dkey();if(dayStats(d).completion<1)d=addDays(d,-1);
+  let n=0;while(d>=S.start&&dayStats(d).completion>=1){n++;d=addDays(d,-1)}
+  return n;
+}
+
+/* ---------- formatting ---------- */
+function clock(s){s=Math.floor(s);return`${Math.floor(s/3600)}:${pad(Math.floor(s%3600/60))}:${pad(s%60)}`}
+function mins(m){const h=Math.floor(m/60),r=m%60;return h?`${h}h${r?' '+r+'m':''}`:`${r}m`}
+
+/* ---------- build ---------- */
+function build(){
+  $('#appTitle').textContent=CFG.app.title;
+  document.title=CFG.app.title;
+  $('#today').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+  $('#quests').innerHTML=CFG.goals.map(g=>`
+    <article class="panel quest" data-id="${g.id}">
+      <header>
+        <h3>${g.name}<span class="tag">Cleared</span></h3>
+        <button class="check" aria-pressed="false" aria-label="Mark ${g.name} complete">&#10003;</button>
+      </header>
+      <p class="note">${g.note||''}</p>
+      <div class="time"><span class="logged">0:00:00</span><span class="target">of ${mins(g.minutes)}</span></div>
+      <div class="meter"><i></i></div>
+      <div class="ctrls">
+        <button class="btn primary run">Start</button>
+        <button class="btn minus" aria-label="Remove ${g.step} minutes">&minus;${g.step}m</button>
+        <button class="btn plus" aria-label="Add ${g.step} minutes">+${g.step}m</button>
+        <span class="reward">+${g.xp} xp</span>
+      </div>
+    </article>`).join('');
+}
+
+function history(){
+  const today=dkey();let h='';
+  for(let i=13;i>=0;i--){
+    const d=addDays(today,-i),st=dayStats(d),p=Math.round(st.completion*100),d0=parseKey(d);
+    h+=`<div class="col${d===today?' today':''}${st.completion>=1?' full':''}${d<S.start?' pre':''}" title="${d}: ${p}%">
+      <div class="bar"><i style="height:${p}%"></i></div><b>${d0.getDate()}</b><small>${'SMTWTFS'[d0.getDay()]}</small></div>`;
+  }
+  $('#history').innerHTML=h;
+}
+function ladder(L){
+  const cur=rankFor(L);
+  $('#ladder').innerHTML=CFG.ranks.map(r=>{
+    const cls=r.letter===cur.letter?'current':(r.minLevel<cur.minLevel?'passed':'');
+    return`<li class="${cls}"><div class="lt">${r.letter}</div><div><strong>${r.name}</strong><span class="t">${r.title}</span></div><div class="lv">Lv ${r.minLevel}+</div></li>`;
+  }).join('');
+  const nr=CFG.ranks.find(r=>r.minLevel>L);
+  $('#ladderNote').textContent=nr?`${nr.minLevel-L} more level${nr.minLevel-L===1?'':'s'} until ${nr.name}.`:'You stand at the top of the ladder.';
+}
+
+/* ---------- update ---------- */
+function update(full){
+  const today=dkey();
+  const xp=totalXp(),li=levelInfo(xp),rk=rankFor(li.L),st=dayStats(today);
+  const maxDay=CFG.goals.reduce((a,g)=>a+g.xp,0)+CFG.bonusXp;
+
+  $('#emblem').textContent=rk.letter;
+  $('#rankName').textContent=rk.name;
+  $('#rankTitle').textContent=rk.title;
+  $('#lvl').textContent=li.L;
+  const pct=li.next?(xp-li.cur)/(li.next-li.cur)*100:100;
+  $('#xpFill').style.width=pct+'%';
+  $('#xpBar').setAttribute('aria-valuenow',Math.round(pct));
+  $('#xpText').textContent=li.next?`${fmt(xp-li.cur)} / ${fmt(li.next-li.cur)} xp to Lv ${li.L+1}`:'Max level reached';
+  const nr=CFG.ranks.find(r=>r.minLevel>li.L);
+  $('#nextRank').textContent=nr?`Next rank: ${nr.letter} at Lv ${nr.minLevel}`:'';
+  $('#nameBtn').textContent=S.name;
+  $('#stStreak').textContent=streak();
+  $('#stToday').textContent=`${fmt(st.xp)}`;
+  $('#stTotal').textContent=fmt(xp);
+
+  $('#dayFill').style.width=(st.completion*100)+'%';
+  $('#dayBar').setAttribute('aria-valuenow',Math.round(st.completion*100));
+  const msg=$('#dayMsg');
+  if(st.completion>=1){msg.textContent=`
