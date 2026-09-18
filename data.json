@@ -1,0 +1,23 @@
+{
+  "app": { "title": "Hunter System" },
+  "goals": [
+    { "id": "exercise", "name": "Exercise", "minutes": 45, "xp": 100, "step": 5,  "note": "Push the body past yesterday's limit." },
+    { "id": "study",    "name": "Study",    "minutes": 360, "xp": 300, "step": 30, "note": "Six hours of deep work. No shortcuts." },
+    { "id": "anime",    "name": "Anime",    "minutes": 120, "xp": 60,  "step": 15, "note": "Recovery time. Earn it, then enjoy it." },
+    { "id": "reading",  "name": "Reading",  "minutes": 60,  "xp": 100, "step": 10, "note": "One hour with a book. Feed the mind." }
+  ],
+  "bonusXp": 100,
+  "penalty": 150,
+  "penaltyBelowPercent": 50,
+  "levels": { "base": 250, "exponent": 1.4, "max": 100 },
+  "ranks": [
+    { "letter": "E", "name": "E-Rank Hunter",        "title": "The Weakest",      "minLevel": 1 },
+    { "letter": "D", "name": "D-Rank Hunter",        "title": "Awakened",         "minLevel": 10 },
+    { "letter": "C", "name": "C-Rank Hunter",        "title": "Gate Clearer",     "minLevel": 20 },
+    { "letter": "B", "name": "B-Rank Hunter",        "title": "Elite Raider",     "minLevel": 35 },
+    { "letter": "A", "name": "A-Rank Hunter",        "title": "Guild Ace",        "minLevel": 50 },
+    { "letter": "S", "name": "S-Rank Hunter",        "title": "Apex Fighter",     "minLevel": 70 },
+    { "letter": "N", "name": "National Level Hunter","title": "Weapon of a Nation","minLevel": 90 },
+    { "letter": "M", "name": "Shadow Monarch",       "title": "Arise",            "minLevel": 100 }
+  ]
+}
